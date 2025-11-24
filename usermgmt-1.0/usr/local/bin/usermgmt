@@ -1,0 +1,188 @@
+#!/bin/bash
+
+# =========================
+# Color definitions
+# =========================
+RED="\e[31m"
+GREEN="\e[32m"
+YELLOW="\e[33m"
+BLUE="\e[34m"
+CYAN="\e[36m"
+RESET="\e[0m"
+
+# =========================
+# Banner
+# =========================
+print_banner() {
+    clear
+    echo -e "${CYAN}"
+    cat << 'EOF'
+.__  __                .__    .__           .___           
+|__|/  |______    ____ |  |__ |__|__  ___ __| _/_______  __
+|  \   __\__  \ _/ ___\|  |  \|  \  \/  // __ |/ __ \  \/ /
+|  ||  |  / __ \\  \___|   Y  \  |>    </ /_/ \  ___/\   / 
+|__||__| (____  /\___  >___|  /__/__/\_ \____ |\___  >\_/  
+              \/     \/     \/         \/    \/    \/      
+EOF
+    echo -e "${YELLOW}                 itachiXDev${RESET}"
+    echo
+}
+
+check_user_exists() {
+    local username="$1"
+
+    if id "$username" &>/dev/null;
+    then
+        return 0
+    else
+        return 1
+    fi
+}
+
+display_user_info() {
+    local user="$1"
+
+    echo -e "${BLUE}=== User Information ===${RESET}"
+    echo "Username      : $user"
+    echo "User ID (UID) : $(id -u "$user")"
+    echo "Group ID (GID): $(id -g "$user")"
+    echo "Groups        : $(id -Gn "$user")"
+    echo "Home Dir      : $(grep "^$user:" /etc/passwd | cut -d: -f6)"
+    echo "Shell         : $(grep "^$user:" /etc/passwd | cut -d: -f7)"
+    echo -e "${BLUE}========================${RESET}"
+}
+
+while true
+do
+    print_banner
+
+    echo -e "${CYAN}=========== User Management Tool ===========${RESET}"
+    echo -e "${YELLOW}1.${RESET} Add User"
+    echo -e "${YELLOW}2.${RESET} Delete User"
+    echo -e "${YELLOW}3.${RESET} Change Password"
+    echo -e "${YELLOW}4.${RESET} Lock User"
+    echo -e "${YELLOW}5.${RESET} Unlock User"
+    echo -e "${YELLOW}6.${RESET} Display User-info"
+    echo -e "${YELLOW}7.${RESET} List All Users"
+    echo -e "${YELLOW}8.${RESET} Exit"
+    echo -e "${CYAN}============================================${RESET}"
+    echo
+
+    read -p "Enter your choice: " choice
+    echo
+
+    case $choice in
+        1)
+            read -p "Enter username for the user: " user
+            echo
+
+            if check_user_exists "$user";
+            then
+                echo -e "${RED}Error: User '$user' already exists!${RESET}"
+                sleep 1.5
+                continue
+            fi
+
+            read -s -p "Enter password for the user: " pass
+            echo
+            read -s -p "Confirm the password: " pass2
+            echo
+            echo
+
+            if [ "$pass2" = "$pass" ]
+            then
+                sudo useradd "$user"
+                echo "$user:$pass" | sudo chpasswd
+                echo -e "${GREEN}User $user created successfully!${RESET}"
+            else
+                echo -e "${RED}Passwords do not match!${RESET}"
+            fi
+            ;;
+        2)
+            read -p "Enter username to delete: " user
+            echo
+            check_user_exists "$user"
+            user_chk=$?
+
+            # user_chk == 1  -> user does NOT exist
+            if [ "$user_chk" -eq 1 ];
+            then
+                echo -e "${RED}User not found${RESET}"
+                sleep 1.5
+                continue
+            else
+                sudo userdel "$user"
+                echo -e "${GREEN}User $user deleted successfully!${RESET}"
+            fi
+            ;;
+        3)
+            read -p "Enter username to change password: " user
+            echo
+            if ! check_user_exists "$user"
+            then
+                echo -e "${RED}User not found${RESET}"
+                sleep 1.5
+                continue
+            else
+                sudo passwd "$user"
+                echo -e "${GREEN}Password changed successfully!${RESET}"
+            fi
+            ;;
+        4)
+            read -p "Enter username to lock: " user
+            echo
+            if ! check_user_exists "$user"
+            then
+                echo -e "${RED}User not found${RESET}"
+                sleep 1.5
+                continue
+            else
+                sudo usermod -L "$user"
+                echo -e "${GREEN}User locked successfully!${RESET}"
+            fi
+            ;;
+        5)
+            read -p "Enter username to unlock: " user
+            echo
+            if ! check_user_exists "$user"
+            then
+                echo -e "${RED}User not found${RESET}"
+                sleep 1.5
+                continue
+            else
+                sudo usermod -U "$user"
+                echo -e "${GREEN}User unlocked successfully!${RESET}"
+            fi
+            ;;
+        6)
+            read -p "Check user info: " user
+            echo
+            if ! check_user_exists "$user"
+            then
+                echo -e "${RED}User not found${RESET}"
+                sleep 1.5
+                continue
+            else
+                display_user_info "$user"
+            fi
+            ;;
+        7)
+            echo -e "${BLUE}=== All Users ===${RESET}"
+            echo -e "${CYAN}Username          UID    Home Directory${RESET}"
+            echo -e "${CYAN}--------------------------------------------${RESET}"
+            awk -F: '$6 ~ /^\/home\// || $6 ~ /^\/bin\// { printf "%-15s   %-6s %s\n", $1, $3, $6 }' /etc/passwd
+            echo -e "${BLUE}========================${RESET}"
+            ;;
+        8)
+            echo -e "${GREEN}Exiting...${RESET}"
+            exit 0
+            ;;
+        *)
+            echo -e "${RED}Invalid input, try again.${RESET}"
+            ;;
+    esac
+
+    echo ""
+    echo -e "${YELLOW}Press Enter to continue...${RESET}"
+    read
+done

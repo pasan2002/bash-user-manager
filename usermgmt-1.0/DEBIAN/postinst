@@ -1,0 +1,10 @@
+#!/bin/bash
+# Post-installation script
+
+# Make the binary executable
+chmod +x /usr/local/bin/usermgmt
+
+echo "usermgmt has been installed successfully!"
+echo "Run 'sudo usermgmt' to start the User Management Tool"
+
+exit 0

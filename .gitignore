@@ -1,6 +1,5 @@
 # DEB Package build artifacts
 *.deb
-usermgmt-1.0/
 
 # Backup files
 *.bak
