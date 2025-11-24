@@ -1,0 +1,32 @@
+# DEB Package build artifacts
+*.deb
+usermgmt-1.0/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+.vscode/
+.idea/
+*.sublime-*
+
+# Log files
+*.log
+
+# Original/test scripts
+user-management-tool.sh
+final.sh
+
+# System files
+.Trash-*
+.directory
