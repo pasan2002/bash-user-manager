@@ -1,6 +1,3 @@
-# DEB Package build artifacts
-*.deb
-
 # Backup files
 *.bak
 *.backup
