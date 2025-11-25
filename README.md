@@ -15,7 +15,7 @@ A colorful interactive terminal-based tool for managing Linux users.
 ## Installation
 ```bash
 # Download the package
-wget https://github.com/yourusername/usermgmt/releases/download/v1.0/usermgmt-1.0.deb
+wget https://github.com/pasan2002/bash-user-manager/releases/download/linux/usermgmt-1.0.deb
 
 # Install
 sudo dpkg -i usermgmt-1.0.deb
