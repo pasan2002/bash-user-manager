@@ -13,9 +13,6 @@ A colorful interactive terminal-based tool for managing Linux users.
 - 📋 List all system users
 
 ## Installation
-
-### Option 1: Install from DEB package
-
 ```bash
 # Download the package
 wget https://github.com/yourusername/usermgmt/releases/download/v1.0/usermgmt-1.0.deb
