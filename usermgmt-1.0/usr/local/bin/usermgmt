@@ -91,7 +91,7 @@ do
 
             if [ "$pass2" = "$pass" ]
             then
-                sudo useradd -m -s /bin/bash "$user"
+                sudo adduser --home /home/"$user" --shell /bin/bash --gecos "" "$user"
                 echo "$user:$pass" | sudo chpasswd
                 echo -e "${GREEN}User $user created successfully!${RESET}"
             else
