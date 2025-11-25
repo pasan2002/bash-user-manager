@@ -8,6 +8,7 @@ A colorful interactive terminal-based tool for managing Linux users.
 - 🗑️ Delete users
 - 🔑 Change passwords
 - 🔒 Lock/Unlock user accounts
+- 👨‍💻 Grant Sudo Access
 - 📊 Display detailed user information
 - 📋 List all system users
 
@@ -18,21 +19,6 @@ A colorful interactive terminal-based tool for managing Linux users.
 ```bash
 # Download the package
 wget https://github.com/yourusername/usermgmt/releases/download/v1.0/usermgmt-1.0.deb
-
-# Install
-sudo dpkg -i usermgmt-1.0.deb
-```
-
-### Option 2: Build from source
-
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/usermgmt.git
-cd usermgmt
-
-# Build the package
-chmod +x build-package.sh
-./build-package.sh
 
 # Install
 sudo dpkg -i usermgmt-1.0.deb
